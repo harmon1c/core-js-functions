@@ -75,7 +75,7 @@ function getArgumentsCount(funcs) {
  *
  */
 function getPowerFunction(exponent) {
-  return function (x) {
+  return (x) => {
     return x ** exponent;
   };
 }
@@ -98,7 +98,7 @@ function getPolynom(...coefs) {
     return null;
   }
 
-  return function (x) {
+  return (x) => {
     let result = 0;
     for (let i = 0; i < coefs.length; i += 1) {
       const pow = coefs.length - 1 - i;
