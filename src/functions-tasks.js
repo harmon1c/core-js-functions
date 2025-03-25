@@ -199,8 +199,31 @@ function retry(func, attempts) {
  * cos(3.141592653589793) ends
  *
  */
-function logger(/* func, logFunc */) {
-  throw new Error('Not implemented');
+function logger(func, logFunc) {
+  return (...args) => {
+    const argsStr = args
+      .map((arg) => {
+        if (typeof arg === 'string') {
+          return `'${arg}'`;
+        }
+        if (Array.isArray(arg)) {
+          const arrayElements = arg
+            .map((item) =>
+              typeof item === 'string' ? `"${item}"` : String(item)
+            )
+            .join(',');
+          return `[${arrayElements}]`;
+        }
+        return String(arg);
+      })
+      .join(',');
+
+    logFunc(`${func.name}(${argsStr}) starts`);
+    const result = func.apply(this, args);
+    logFunc(`${func.name}(${argsStr}) ends`);
+
+    return result;
+  };
 }
 
 /**
@@ -216,8 +239,10 @@ function logger(/* func, logFunc */) {
  *   partialUsingArguments(fn, 'a','b','c')('d') => 'abcd'
  *   partialUsingArguments(fn, 'a','b','c','d')() => 'abcd'
  */
-function partialUsingArguments(/* fn, ...args1 */) {
-  throw new Error('Not implemented');
+function partialUsingArguments(fn, ...args1) {
+  return (...args2) => {
+    return fn(...args1, ...args2);
+  };
 }
 
 /**
